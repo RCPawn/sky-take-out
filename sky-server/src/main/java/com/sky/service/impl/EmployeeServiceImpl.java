@@ -33,7 +33,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     /**
      * 员工登录
-     *
      * @param employeeLoginDTO
      * @return
      */
@@ -69,7 +68,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     /**
      * 新增员工
-     *
      * @param employeeDTO
      */
     public void save(EmployeeDTO employeeDTO) {
@@ -97,7 +95,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     /**
      * 分页查询
-     *
      * @param employeePageQueryDTO
      * @return
      */
@@ -113,16 +110,42 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     /**
      * 启用禁用员工账号
-     *
      * @param status
      * @param id
      */
-    @Override
     public void startOrStop(Integer status, long id) {
         Employee employee = Employee.builder()
                 .status(status)
                 .id(id)
                 .build();
+        employeeMapper.update(employee);
+    }
+
+    /**
+     * 根据id查询员工信息
+     * @param id
+     * @return
+     */
+    public Employee getById(long id) {
+        Employee employee = employeeMapper.getById(id);
+        employee.setPassword("****");
+        return employee;
+    }
+
+    /**
+     * 编辑员工信息
+     * @param employeeDTO
+     */
+    public void update(EmployeeDTO employeeDTO) {
+        Employee employee = new Employee();
+
+        //对象拷贝
+        BeanUtils.copyProperties(employeeDTO, employee);
+
+        //设置属性
+        employee.setUpdateTime(LocalDateTime.now());
+        employee.setUpdateUser(BaseContext.getCurrentId());
+
         employeeMapper.update(employee);
     }
 
